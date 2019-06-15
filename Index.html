@@ -55,6 +55,9 @@
                 console.log("Pesquisando Livro: "+bookName)
                 $.get('https://www.googleapis.com/books/v1/volumes?q='+bookName, handleResponse);
             }
+            function favBooks(){
+
+            }       
             function handleResponse(response) {
                 if(response && response.items){
                     for (var i = 0; i < response.items.length; i++) {
@@ -72,7 +75,8 @@
                                                     +"<h5 class='card-title'>"+item.volumeInfo.title+"</h5>"
                                                     +"<p class='card-text'>Autor: "+item.volumeInfo.authors.join()+"<br/>Publicado Por: "+item.volumeInfo.publisher+"<br/>Data de Publicação: "+item.volumeInfo.publishedDate+"</p>"
                                                     +"<a class='btn btn-success btn-lg mt-4' href='"+item.volumeInfo.previewLink+"' target='_blank'>Detalhes</a>"
-                                                    +"<a class='btn btn-success btn-lg mt-4' href='"+item.volumeInfo.previewLink+"' target='_blank'>Detalhes</a>"
+                                                    +"<button class='btn btn-success' id='favBooks'><i class='fas fa-star'></i></button>"
+                                                    
                                             +"</div>"
                                         +"</div>"
                                     +"</div>"
