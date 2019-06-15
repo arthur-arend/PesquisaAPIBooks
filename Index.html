@@ -1,25 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Pesquisa com API do Google</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <title>Pesquisa API Google</title>
 </head>
 <body>
-    <div class="area-pesquisa">
-        <div class="d-flex justify-content-center" id="titulo">
-            <h1>Pesquise Livros com API do GOOGLE</h1>
+    <div class="container">
+        <div id="areaPesquisa">
+            <div class="d-flex justify-content-center">
+                <div class="p-4">Pesquisa Livro com API do Google</div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <div class="input-group mb-5 mx-5">
+                    <input id="nomeLivro" type="text" class="form-control" placeholder="Buscar livro" aria-label="Buscar Livro">
+                    <div class="input-group-append">
+                        <button id="pesquisaLivro" class="btn btn-success" type="button">Busca!</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="d-flex justify-content-center">
-            <input aria-label="Digite para Pesquisar" id="barra-pesquisa" type="text" placeholder="Busca">
-            <button aria-label="Pesquisar" id="pesquisa-btn"><i class="fas fa-search"></i></button> 
-        </div>          
+        <div id="init-msg">
+            <div class="d-flex justify-content-center">
+                <div class="pt-1 mr-2 align-self-center"><i class="material-icons">mood_bad</i></div>
+                <div class="align-self-center">Pesqusa vazia, busque algum título!</div>
+            </div>
+        </div>
+        <div id="resultadoLivros" class="d-flex justify-content-center row"></div>
     </div>
-    <div id="resultado" class="d-flex justify-content-center row"></div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+            $("#nomeLivro").on('change paste', function() {
+                var bookName = $("#nomeLivro").val();
+                if(bookName){
+                    $( "#init-msg" ).addClass("d-none");
+                    $( "#resultadoLivros" ).empty();
+                    bookSearch(bookName);
+                } else {
+                    $( "#init-msg" ).removeClass("d-none");
+                    $( "#resultadoLivros" ).empty();
+                }          
+            });
+            function bookSearch(bookName) {
+                console.log("Pesquisando Livro: "+bookName)
+                $.get('https://www.googleapis.com/books/v1/volumes?q='+bookName, handleResponse);
+            }
+            function handleResponse(response) {
+                if(response && response.items){
+                    for (var i = 0; i < response.items.length; i++) {
+                        var item = response.items[i];
+                        // in production code, item.text should have the HTML entities escaped.
+                        document.getElementById("resultadoLivros").innerHTML += ""
+                            +"<div class='col-sm-6 my-4'>"
+                                +"<div class='card mb-3 h-100' style='max-width: 540px;'>"
+                                    +" <div class='row no-gutters'>"
+                                            +"<div class='col-md-4'>"
+                                                +"<img src='"+item.volumeInfo.imageLinks.smallThumbnail+"' class='card-img' alt='"+item.volumeInfo.title+"' Image>"
+                                            +"</div>"
+                                            +"<div class='col-md-8'>"
+                                                +"<div class='card-body'>"
+                                                    +"<h5 class='card-title'>"+item.volumeInfo.title+"</h5>"
+                                                    +"<p class='card-text'>Autor: "+item.volumeInfo.authors.join()+"<br/>Publicado Por: "+item.volumeInfo.publisher+"<br/>Data de Publicação: "+item.volumeInfo.publishedDate+"</p>"
+                                                    +"<a class='btn btn-success btn-lg mt-4' href='"+item.volumeInfo.previewLink+"' target='_blank'>Detalhes</a>"
+                                                    +"<a class='btn btn-success btn-lg mt-4' href='"+item.volumeInfo.previewLink+"' target='_blank'>Detalhes</a>"
+                                            +"</div>"
+                                        +"</div>"
+                                    +"</div>"
+                                +"</div>"
+                            +"</div>";
+                    }
+                } else {
+                    console.log("No data, response : " + JSON.stringify(response));
+                    document.getElementById("resultadoLivros").innerHTML = "<h4>Nenhum Resultado!</h4>";                  
+                }                
+            }
+        });        
+    </script>
 </body>
-<!---->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="main.min.js"></script>
+</html>
