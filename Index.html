@@ -34,9 +34,7 @@
         </div>
         <div id="resultadoLivros" class="d-flex justify-content-center row"></div>
     </div>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--JS-->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <script>
@@ -61,7 +59,7 @@
                 if(response && response.items){
                     for (var i = 0; i < response.items.length; i++) {
                         var item = response.items[i];
-                        // in production code, item.text should have the HTML entities escaped.
+                        
                         document.getElementById("resultadoLivros").innerHTML += ""
                             +"<div class='col-sm-6 my-4'>"
                                 +"<div class='card mb-3 h-100' style='max-width: 540px;'>"
@@ -92,7 +90,7 @@
                                 fav[i].addEventListener('click', function(){
                                     // o array = fav[i] ;
                                     
-                                    // depois tu mostra ele array na tela
+                                    // depois mostra ele array na tela
                                     console.log(this);
                                     console.log(target[i]);
                                     
