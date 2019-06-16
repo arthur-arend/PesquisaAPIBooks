@@ -3,12 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-        crossorigin="anonymous">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="shortcut icon" type="image/png" href="C:\Users\Arthut\Desktop\PesquisaAPI\custom\images\bookmark.png"/>
     <title>Pesquisa API Google</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="bookmark.png"/>
 </head>
 <body>
     <div class="container">
@@ -21,7 +20,7 @@
                     <input id="nomeLivro" type="text" class="form-control" placeholder="Buscar livro" aria-label="Buscar Livro">
                     <div class="input-group-append">
                         <button id="pesquisaLivro" class="btn btn-success" type="button">Busca!</button>
-                        <button id="limpaPesquisa" class="btn btn-success" type="button">Favoritos</button>
+                        <button id="mostraFavorito" class="btn btn-success" type="button">Favoritos</button>
                     </div>
                 </div>
             </div>
@@ -33,78 +32,8 @@
             </div>
         </div>
         <div id="resultadoLivros" class="d-flex justify-content-center row"></div>
-    </div>
-<!--JS-->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function(){
-            $("#nomeLivro").on('change paste', function() {
-                var bookName = $("#nomeLivro").val();
-                if(bookName){
-                    $( "#init-msg" ).addClass("d-none");
-                    $( "#resultadoLivros" ).empty();
-                    bookSearch(bookName);
-                } else {
-                    $( "#init-msg" ).removeClass("d-none");
-                    $( "#resultadoLivros" ).empty();
-                }          
-            });
-      
-            function bookSearch(bookName) {
-                console.log("Pesquisando Livro: "+bookName)
-                $.get('https://www.googleapis.com/books/v1/volumes?q='+bookName, handleResponse);
-            }  
-            function handleResponse(response) {
-                if(response && response.items){
-                    for (var i = 0; i < response.items.length; i++) {
-                        var item = response.items[i];
-                        
-                        document.getElementById("resultadoLivros").innerHTML += ""
-                            +"<div class='col-sm-6 my-4'>"
-                                +"<div class='card mb-3 h-100' style='max-width: 540px;'>"
-                                    +" <div class='row no-gutters'>"
-                                            +"<div class='col-md-4'>"
-                                                +"<img src='"+item.volumeInfo.imageLinks.smallThumbnail+"' class='card-img' alt='"+item.volumeInfo.title+"' Image>"
-                                            +"</div>"
-                                            +"<div class='col-md-8'>"
-                                                +"<div class='card-body'>"
-                                                    +"<h5 class='card-title'>"+item.volumeInfo.title+"</h5>"
-                                                    +"<p class='card-text'>Autor: "+item.volumeInfo.authors.join()+"<br/>Publicado Por: "+item.volumeInfo.publisher+"<br/>Data de Publicação: "+item.volumeInfo.publishedDate+"</p>"
-                                                    +"<a class='btn btn-success btn-lg mt-4' href='"+item.volumeInfo.previewLink+"' target='_blank'>Detalhes</a>"
-                                                    +"<button class=' fav btn btn-success' href='" + item.volumeInfo.previewLink + "' <i class='fas fa-star'></i></button>"
-                                            
-                                            +"</div>"
-                                        +"</div>"
-                                    +"</div>"
-                                +"</div>"
-                            +"</div>";    
-                            let fav = document.querySelectorAll('.fav');
-                            let target = document.querySelectorAll('.target');
-                        
-                            let favoritos = new Array();
-            
-                            target.forEach(function(el, i, arr){});
-                        
-                            fav.forEach(function(el, i, arr){
-                                fav[i].addEventListener('click', function(){
-                                    // o array = fav[i] ;
-                                    
-                                    // depois mostra ele array na tela
-                                    console.log(this);
-                                    console.log(target[i]);
-                                    
-                                    favoritos.push(target[i]);
-                                    console.log('Favoritos sendo salvos: ' + favoritos);
-                                })
-                            });                       
-                    }
-                } else {
-                    console.log("Nenhuma informação para : " + JSON.stringify(response));
-                    document.getElementById("resultadoLivros").innerHTML = "<h4>Nenhum Resultado!</h4>";                  
-                }                
-            }
-        });        
-    </script>
+    </div>  
 </body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="crossorigin="anonymous"></script>
+<script src="main.js"></script>
 </html>
