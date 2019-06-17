@@ -60,7 +60,7 @@ $(document).ready(function() {
                     "<div class='card-body'>" +
                     "<h5 class='card-title'>" + item.volumeInfo.title + "</h5>" +
                     "<p class='card-text'>Autor: " + item.volumeInfo.authors +"</p>" +
-                    "<button class=' fav btn btn-success btn-lg mt-4' href='" + item.volumeInfo.previewLink + "' >Favoritos</button>" +
+                    "<button  class=' fav btn btn-success btn-lg mt-4' href='" + item.volumeInfo.previewLink + "' >Favoritos</button>" +
                     "<a class='btn btn-success btn-lg mt-4' href='" + item.volumeInfo.previewLink + "' target='_blank'>Detalhes</a>" +
                     "</div>" +
                     "</div>" +
@@ -73,6 +73,7 @@ $(document).ready(function() {
                 
                     fav.forEach(function(el, i, arr){
                         fav[i].addEventListener('click', function(){
+                            $(this).toggleClass('blue');
                             favorites.push(target[i]);
                         })
                     });                                   
