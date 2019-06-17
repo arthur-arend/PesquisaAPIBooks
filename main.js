@@ -1,3 +1,7 @@
+var favoritos = new Array();
+var pag = 0;
+var bookName;
+
 $(document).ready(function() {
     $("#pesquisaLivro").click(function() {
         var bookName = $("#nomeLivro").val();
@@ -10,25 +14,39 @@ $(document).ready(function() {
             $("#resultadoLivros").empty();
         }
     });
-    var favoritos = new Array();
+    
     function bookSearch(bookName) {
         console.log("Pesquisando Livro: " + bookName)
-        $.get('https://www.googleapis.com/books/v1/volumes?q=' + bookName, handleResponse);
+        $.get('https://www.googleapis.com/books/v1/volumes?q='+bookName + "&startIndex=" + pag +"&maxResults=4", handleResponse);
     }
     $(mostraFavorito).click(function(){
         $("#resultadoLivros").empty();
         
         favoritos.forEach(element => {
             document.getElementById("resultadoLivros").innerHTML += "" + element.innerHTML
-            $(".fav btn btn-success btn-lg mt-4").css("display", "none");
         });
     });
+    $("#proximo").click(function() {
+        pag = pag+4;
+        $("#resultadoLivros").empty();
+        bookName = $("#nomeLivro").val();
+        bookSearch(bookName);
+        console.log('Mais 4');
+      });
+      $("#anterior").click(function() {
+          if(pag > 0){
+            pag = pag-4;
+            $("#resultadoLivros").empty();
+            bookName = $("#nomeLivro").val();
+            bookSearch(bookName);
+            console.log('Menos 4');
+          }    
+      });
 
     function handleResponse(response) {
         if (response && response.items) {
             for (var i = 0; i < response.items.length; i++) {
                 var item = response.items[i];
-                // in production code, item.text should have the HTML entities escaped.
                 document.getElementById("resultadoLivros").innerHTML += "" +
                     "<div class='col-sm-6 my-4 target'>" +
                     "<div class='card mb-3 h-100' style='max-width: 540px;'>" +
@@ -39,7 +57,7 @@ $(document).ready(function() {
                     "<div class='col-md-8'>" +
                     "<div class='card-body'>" +
                     "<h5 class='card-title'>" + item.volumeInfo.title + "</h5>" +
-                    "<p class='card-text'>Autor: " + item.volumeInfo.authors.join() + "<br/>Publicado Por: " + item.volumeInfo.publisher + "<br/>Data de Publicação: " + item.volumeInfo.publishedDate + "</p>" +
+                    "<p class='card-text'>Autor: " + item.volumeInfo.authors +"</p>" +
                     "<button class=' fav btn btn-success btn-lg mt-4' href='" + item.volumeInfo.previewLink + "' >Favoritos</button>" +
                     "<a class='btn btn-success btn-lg mt-4' href='" + item.volumeInfo.previewLink + "' target='_blank'>Detalhes</a>" +
                     "</div>" +
