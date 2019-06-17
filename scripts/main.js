@@ -23,8 +23,7 @@ $(document).ready(function() {
     }
     //Código de Favoritos
     $("#show-fav").click(function(){
-        $("#book-results").empty();
-        
+        $("#book-results").empty();  
         favorites.forEach(element => {
             document.getElementById("book-results").innerHTML += "" + element.innerHTML
         });
@@ -74,7 +73,7 @@ $(document).ready(function() {
                     fav.forEach(function(el, i, arr){
                         fav[i].addEventListener('click', function(){
                             $(this).toggleClass('blue');
-                            favorites.push(target[i]);
+                            favorites.push(target[i]);  
                         })
                     });                                   
             }
