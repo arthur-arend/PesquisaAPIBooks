@@ -16,14 +16,14 @@ $(document).ready(function() {
             $("#book-results").empty();
         }
     });
-    
+
     function bookSearch(bookName) {
         console.log("Pesquisando Livro: " + bookName)
-        $.get('https://www.googleapis.com/books/v1/volumes?q='+bookName + "&startIndex=" + pagination +"&maxResults=4", handleResponse);
+        $.get('https://www.googleapis.com/books/v1/volumes?q=' + bookName + "&startIndex=" + pagination + "&maxResults=" + pagcontrol, handleResponse);
     }
     //Código de Favoritos
-    $("#show-fav").click(function(){
-        $("#book-results").empty();  
+    $("#show-fav").click(function() {
+        $("#book-results").empty();
         favorites.forEach(element => {
             document.getElementById("book-results").innerHTML += "" + element.innerHTML
         });
@@ -34,15 +34,15 @@ $(document).ready(function() {
         $("#book-results").empty();
         bookName = $("#book-name").val();
         bookSearch(bookName);
-      });
-      $("#previous").click(function() {
-          if(pagination > 0){
+    });
+    $("#previous").click(function() {
+        if (pagination > 0) {
             pagination = pagination - pagcontrol;
             $("#book-results").empty();
             bookName = $("#book-name").val();
             bookSearch(bookName);
-          }    
-      });
+        }
+    });
     //Código de 
     function handleResponse(response) {
         if (response && response.items) {
@@ -58,7 +58,7 @@ $(document).ready(function() {
                     "<div class='col-md-8'>" +
                     "<div class='card-body'>" +
                     "<h5 class='card-title'>" + item.volumeInfo.title + "</h5>" +
-                    "<p class='card-text'>Autor: " + item.volumeInfo.authors +"</p>" +
+                    "<p class='card-text'>Autor: " + item.volumeInfo.authors + "</p>" +
                     "<button  class=' fav btn btn-success btn-lg mt-4' href='" + item.volumeInfo.previewLink + "' >Favoritos</button>" +
                     "<a class='btn btn-success btn-lg mt-4' href='" + item.volumeInfo.previewLink + "' target='_blank'>Detalhes</a>" +
                     "</div>" +
@@ -66,20 +66,20 @@ $(document).ready(function() {
                     "</div>" +
                     "</div>" +
                     "</div>";
-                
-                    let fav = document.querySelectorAll('.fav');
-                    let target = document.querySelectorAll('.target');
-                
-                    fav.forEach(function(el, i, arr){
-                        fav[i].addEventListener('click', function(){
-                            $(this).toggleClass('blue');
-                            favorites.push(target[i]);  
-                        })
-                    });                                   
+
+                let fav = document.querySelectorAll('.fav');
+                let target = document.querySelectorAll('.target');
+
+                fav.forEach(function(el, i, arr) {
+                    fav[i].addEventListener('click', function() {
+                        this.classList.toggle('blue')
+                        favorites.push(target[i]);
+                    })
+                });
             }
         } else {
             console.log("Nenhum arquivo encontrado " + JSON.stringify(response));
             document.getElementById("book-results").innerHTML = "<h4>Nenhum Resultado!</h4>";
-        }              
-    }            
+        }
+    }
 });
