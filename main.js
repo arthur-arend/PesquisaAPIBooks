@@ -1,53 +1,55 @@
-var favoritos = new Array();
-var pag = 0;
+var favorites = new Array();
+var pagination = 0;
 var bookName;
+var pagcontrol = 4;
 
 $(document).ready(function() {
-    $("#pesquisaLivro").click(function() {
-        var bookName = $("#nomeLivro").val();
+    $("#book-srch").click(function() {
+        var bookName = $("#book-name").val();
         if (bookName) {
+            pagination = 0;
             $("#init-msg").addClass("d-none");
-            $("#resultadoLivros").empty();
+            $("#book-results").empty();
             bookSearch(bookName);
         } else {
             $("#init-msg").removeClass("d-none");
-            $("#resultadoLivros").empty();
+            $("#book-results").empty();
         }
     });
     
     function bookSearch(bookName) {
         console.log("Pesquisando Livro: " + bookName)
-        $.get('https://www.googleapis.com/books/v1/volumes?q='+bookName + "&startIndex=" + pag +"&maxResults=4", handleResponse);
+        $.get('https://www.googleapis.com/books/v1/volumes?q='+bookName + "&startIndex=" + pagination +"&maxResults=4", handleResponse);
     }
-    $(mostraFavorito).click(function(){
-        $("#resultadoLivros").empty();
+    //Código de Favoritos
+    $("#show-fav").click(function(){
+        $("#book-results").empty();
         
-        favoritos.forEach(element => {
-            document.getElementById("resultadoLivros").innerHTML += "" + element.innerHTML
+        favorites.forEach(element => {
+            document.getElementById("book-results").innerHTML += "" + element.innerHTML
         });
     });
-    $("#proximo").click(function() {
-        pag = pag+4;
-        $("#resultadoLivros").empty();
-        bookName = $("#nomeLivro").val();
+    //Código de Paginação
+    $("#next").click(function() {
+        pagination = pagination + pagcontrol;
+        $("#book-results").empty();
+        bookName = $("#book-name").val();
         bookSearch(bookName);
-        console.log('Mais 4');
       });
-      $("#anterior").click(function() {
-          if(pag > 0){
-            pag = pag-4;
-            $("#resultadoLivros").empty();
-            bookName = $("#nomeLivro").val();
+      $("#previous").click(function() {
+          if(pagination > 0){
+            pagination = pagination - pagcontrol;
+            $("#book-results").empty();
+            bookName = $("#book-name").val();
             bookSearch(bookName);
-            console.log('Menos 4');
           }    
       });
-
+    //Código de 
     function handleResponse(response) {
         if (response && response.items) {
             for (var i = 0; i < response.items.length; i++) {
                 var item = response.items[i];
-                document.getElementById("resultadoLivros").innerHTML += "" +
+                document.getElementById("book-results").innerHTML += "" +
                     "<div class='col-sm-6 my-4 target'>" +
                     "<div class='card mb-3 h-100' style='max-width: 540px;'>" +
                     " <div class='row no-gutters'>" +
@@ -71,13 +73,13 @@ $(document).ready(function() {
                 
                     fav.forEach(function(el, i, arr){
                         fav[i].addEventListener('click', function(){
-                            favoritos.push(target[i]);
+                            favorites.push(target[i]);
                         })
                     });                                   
             }
         } else {
             console.log("Nenhum arquivo encontrado " + JSON.stringify(response));
-            document.getElementById("resultadoLivros").innerHTML = "<h4>Nenhum Resultado!</h4>";
+            document.getElementById("book-results").innerHTML = "<h4>Nenhum Resultado!</h4>";
         }              
     }            
 });
